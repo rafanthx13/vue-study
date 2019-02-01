@@ -1,0 +1,49 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div id="app">
+    <p>{{ contador }}</p>
+    <button v-on:click="somar(5, $event)">Somar 1</button>
+    <p v-on:mousemove="atualizarXY">
+        Mouse: {{ x }} e {{ y }}
+        <!-- Por 'span' está dentro de 'p' que tem o 'v-on' entâo, nele aocntece a mesma coisa.
+            Nele, vai ler o evento de 'mousemove'. Podemos modificar esse eveto na span apra que 
+            isso não aconteça. Usaremso Modificadores de eventos.
+            '.stop' interrompe o evento
+            '.prevent' previne que o evento ocorra da forma default
+            Também há outras forma de fazerisso com JS puro
+            Como acionar um método que execute isso:
+                event.preventDefault()
+                event.stopPropagation()
+        -->
+        <span v-on:mousemove.stop.prevent="">PARAR AQUI!!!!</span>
+    </p>
+    <a v-on:click.prevent="naoNavegar" href="http://google.com">Google</a>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            contador: 0,
+            x: 0,
+            y: 0,
+        },
+        methods: {
+            somar(passo, event) {
+                console.log(passo, event)
+                this.contador += passo
+            },
+            atualizarXY(event) {
+                this.x = event.clientX
+                this.y = event.clientY
+            },
+            naoNavegar(event) {
+                console.log('não navegar')
+                // event.preventDefault()
+            }
+            // parar(event) {
+            //     event.stopPropagation()
+            // }
+        }
+    })
+</script>

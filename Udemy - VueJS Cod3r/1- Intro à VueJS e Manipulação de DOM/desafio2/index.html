@@ -1,0 +1,27 @@
+<script src="https://unpkg.com/vue"></script>
+
+<div id="desafio">
+    <!-- 1) Exiba um alert quando o botão for clicado -->
+    <div>
+        <!-- Usamos 'v-on' para quando der um click, executa o método que chama o 'alert' -->
+        <button v-on:click="showAlert">Exibir Alerta</button>
+    </div>
+
+    <hr>
+    
+    <!-- 2) Escute o evento "keyup" e armazene o valor na propriedade
+        data (dica: event.target.value) -->
+    <div>
+        <input type="text" v-on:keyup='listenInput'>
+        <p>{{ valor }}</p>
+    </div>
+    
+    <!-- 3) Ajuste o exemplo 2 para disparar o evento "keydown" somente
+        quando a tecla for ENTER -->
+    <div>
+        <!-- Como '$event' pega o evento, podemos ja definir valor dentro do html -->
+        <input type="text" v-on:keydown.enter="valor = $event.target.value">
+        <p>{{ valor }}</p>
+    </div>
+</div>
+<script src="app.js"></script>
