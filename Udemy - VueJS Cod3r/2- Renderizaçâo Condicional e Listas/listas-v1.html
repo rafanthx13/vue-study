@@ -1,0 +1,71 @@
+<meta charset="UTF-8">
+<script src="https://unpkg.com/vue"></script>
+
+<div id="app">
+
+    <ul>
+        <!-- Podemos pegar o index como segundo elemento. 
+            A nomenclatura nâo interresa, 
+            saiba que passa na ordem [1.Elmeento, 2.Index] -->
+        <li v-for="(cor, i) in cores">{{ i + 1 }} {{ cor }}</li>
+    </ul>
+
+    <!-- Usando template nâo gera a tag template -->
+    <!-- Para obersar esse recurso do HTML tem que abir F12 no Browser -->
+    <!-- Eu poderia usar uma <div> mas aí ela seria gerada também -->
+    <hr>
+    <template v-for="(cor, i) in cores">
+        <h1>{{ cor }}</h1>
+        <p>{{ i }}</p>
+    </template>
+    <hr>
+
+    <!-- Iterando objetos -->
+    <ul>
+        <li v-for="pessoa in pessoas">
+            {{ pessoa.nome }}
+            <div v-for="(valor, chave, index) in pessoa">
+            [{{index}}] . {{ chave }} = {{ valor }}
+            </div>
+        </li>
+    </ul>
+    <hr>
+
+    <!-- Vai rederizar 10 números começando de 1-->
+    <!-- útil para reperitr um bloco de HTML n vezes
+         Para isso basta usar esse literal -->
+    <span v-for="n in 10">{{ n }} </span>
+    <hr>
+
+    <!-- Para trabalhar com listas complexas ou que mudam de ordem
+         O Vue recomenda dar uma dica para ele para rederização.
+            Site: https://br.vuejs.org/v2/guide/list.html#key
+        Entâo, use o atributo: ':key="attr"' e aponte para um atributo
+        que seja único para cada objeto do JS como msotrado abaixo
+     -->
+    <ul>
+        <li v-for="(cor, i) in cores" :key="cor">
+            ({{ i + 1 }}) {{ cor }}
+        </li>
+    </ul>
+
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            cores: ['vermelho', 'verde', 'amarelo', 'azul'],
+            pessoas: [
+                { nome: 'Ana', idade: 26, peso: 59 },
+                { nome: 'Guilherme', idade: 22, peso: 89 }
+            ]
+        }
+    })
+</script>
+
+<style>
+    h1, p {
+        display: inline;
+    }
+</style>

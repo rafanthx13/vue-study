@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Introdução ao Vue JS</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+
+    <div id="app">
+
+        <gui-titulo v-bind:titulo="meuTitulo"></gui-titulo>
+        
+        <input type="text" v-model="meuTitulo">
+
+        <p>{{ 23.983475235 | TrataValor }}</p>
+        
+    </div>
+
+    <script type="text/javascript">
+        
+        Vue.component('gui-titulo', {
+            props: ['titulo'],
+            template: `<h2>{{ titulo }}</h2>`
+        });
+
+        var app = new Vue({
+            el:"#app",
+            data: {
+                meuTitulo: "Esse é o meu Título",
+                html_text: '<a href="#">Esse é um link</a>'
+            },       
+            filters: {
+                TrataValor: function(valor) {
+                    return ('R$ ' + (valor).toFixed(2)).replace('.',',')
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+

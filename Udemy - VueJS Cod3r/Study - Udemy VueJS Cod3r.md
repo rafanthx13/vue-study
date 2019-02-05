@@ -10,10 +10,6 @@
 
 + "" (Data)
 
-**Descrição em uma única frase**
-
-+ ""
-
 **Links úteis**
 
 + [JSSfiddle para codificar com 4 telas pelo Browser](https://jsfiddle.net/)
@@ -110,7 +106,7 @@ new Vue({
 </div>
 ````
 
-## 1. Introdução
+## 1. Introdução: Manipulação da DOM
 
 ### Interpolação do Vue
 
@@ -685,3 +681,671 @@ Da mesmo forma que da pra fazer atribuindo uma `class`, podemos atribuir um `sty
 ````
 
 > Como nâo gosto muito de css, procure os arquivos `estilos-v.html` ou assista denovo as aulas
+
+## 2. Rederizaçâo Condicional e Listas
+
+Lembrete da Sintaxe Reduzida
+
+`v-bind` ==> `:`
+
+`v-on` ==> `@`
+
+### `v-if`
+
+Determina se uma tag será mostrada ou não deacordo com algum atributo do especificado. ELE REMOVE O ELEMNTO DA PÁGINA
+
+O Vue tem a adiçâo de poder usar a diretiva `v-else-if=attr`. Que faz um link com a ateriori
+
+Você também pode usar `v-else` SE E SEOMENTE SE antes da TAG tiver o `v-if`. Tem que se um elemento depois do outro.
+
+Tanto `v-else-if` quanto `v-else` deve está em sequencia para funcionar corretamente.
+
+**OBS**: o `v-if` e similares fazem com que **O ELEMENTO SUMA DO HTML**. Não é um truque de esconder com CSS, é sumir a tag mesmo. No angualr JS tinha diretivas que tirava e outras que não mostrava. Veremos o do vue em `v-show`
+
+
+
+````html
+<meta charset="UTF-8">
+<script src="https://unpkg.com/vue"></script>
+
+<div id="app">
+    <p v-if="logado">Usuário Logado: {{ nome }}</p>
+    <p v-else-if="anonimo">Navegando como anonimo</p>
+    <p v-else>Nenhum usuário logado</p>
+    <!-- Botão muda o estado de logado -->
+    <button @click="logado = !logado">
+        {{ logado ? 'Sair' : 'Entrar' }}</button>
+    <input type="checkbox" v-model="anonimo">
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            nome: 'Maria',
+            logado: false,
+            anonimo: true
+        }
+    })
+</script>
+````
+
+`HTML:<template>`: Essa tag nâo é gerada no HTML FInal. Asim, se vocÊ usar o `v-if` no template, quando rederizar, nâo vai mostrar a tag template. Isso não acontece com outras tags.
+
+### `v-show`
+
+NÂO EXCLUI O ELEMETNO DA DOM. Se você tiver um trecho grande que pode ou não ser mostrado, talvez seja boa ideia usar o `v-show`. Pode ser usado para o aparecer e esconder de uma tag for muito constante numa página. Fazer isso é custoso.
+
+Em geral coloca o CSS `style` `display: none.`
+
+Não possuo `v-else`
+
+````html
+<div id="app">
+    <footer v-show="logado">
+        Desenvolvido pra vc!
+    </footer>
+    <footer v-show="!logado">
+            Desenvolvido pra vc que é desconhecido!
+    </footer>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {logado: false}
+    })
+</script>
+````
+
+
+
+### `v-for` **renderizando** listas
+
+Muito parecido com o AngularJS, utilizamos a diretiva `v-for` e apontamos para a listas como:
+
+````html
+<div v-for="pessoa in pessoas"> {{ pessoa }}</div>
+````
+
+Serve para renderizar Arrays e objetos JS
+
+Para acessar outros elemetnos como index e chave , basta colocalos com argumentos que recebem do Objeto JS como `v-for="(cor, index) in cores"` para um array ou  `v-for="(valor, chave, index) in pessoa"` para um objeto
+
+````html
+<meta charset="UTF-8">
+<script src="https://unpkg.com/vue"></script>
+
+<div id="app">
+
+    <ul>
+        <!-- Podemos pegar o index como segundo elemento. 
+            A nomenclatura nâo interresa, 
+            saiba que passa na ordem [1.Elmeento, 2.Index] -->
+        <li v-for="(cor, i) in cores">{{ i + 1 }} {{ cor }}</li>
+    </ul>
+
+    <!-- Usando template nâo gera a tag template -->
+    <!-- Para obersar esse recurso do HTML tem que abir F12 no Browser -->
+    <!-- Eu poderia usar uma <div> mas aí ela seria gerada também -->
+    <hr>
+    <template v-for="(cor, i) in cores">
+        <h1>{{ cor }}</h1>
+        <p>{{ i }}</p>
+    </template>
+    <hr>
+
+    <!-- Iterando objetos -->
+    <ul>
+        <li v-for="pessoa in pessoas">
+            {{ pessoa.nome }}
+            <div v-for="(valor, chave, index) in pessoa">
+            [{{index}}] . {{ chave }} = {{ valor }}
+            </div>
+        </li>
+    </ul>
+    <hr>
+
+    <!-- Vai rederizar 10 números começando de 1
+         útil para reperitr um bloco de HTML n vezes
+         Para isso basta usar esse literal -->
+    <span v-for="n in 10">{{ n }} </span>
+    <hr>
+
+    <!-- Para trabalhar com listas complexas ou que mudam de ordem
+         O Vue recomenda dar uma dica para ele para rederização.
+            Site: https://br.vuejs.org/v2/guide/list.html#key
+        Entâo, use o atributo: ':key="attr"' e aponte para um atributo
+        que seja único para cada objeto do JS como msotrado abaixo
+     -->
+    <ul>
+        <li v-for="(cor, i) in cores" :key="cor">
+            ({{ i + 1 }}) {{ cor }}
+        </li>
+    </ul>
+
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            cores: ['vermelho', 'verde', 'amarelo', 'azul'],
+            pessoas: [
+                { nome: 'Ana', idade: 26, peso: 59 },
+                { nome: 'Guilherme', idade: 22, peso: 89 }
+            ]
+        }
+    })
+</script>
+
+<style> h1, p { display: inline; }</style>
+````
+
+
+
+## 3. Entendendo a fundo a instância `Vue`
+
+[Como funciona a instância `Vue` na DOC](https://br.vuejs.org/v2/guide/instance.html)
+
+As suas Propriedade:
+
++ el
++ data
+  + Quando este dado for modificado, a camada visual irá “re-renderizar”. Deve-se observar que propriedades em `data` são **reativas** somente se já existem desde quando a instância foi criada.
++ computed
++ watch
++ methods
+
+### É  possível criar várias instâncias do `Vue`?
+
+SIM, apesar de não ser muito usado, pode haver momentos que se possa fazer isso.
+
+Costuma-se usar para fazer pequenas coisas num prjeto web, como widgets.
+
+Lembre-se que uma instância nâo consegue acessar nada de outra.
+
+````html
+<!-- mult-instancia-vue.html -->
+<div id="app1">
+    {{ titulo1 }}
+    <button @click="alterar">Alterar</button>
+</div>
+
+<div id="app2">
+    {{ titulo2 }}
+    <button @click="alterar">Alterar</button>
+</div>
+
+<script>
+    new Vue({
+        el: '#app1',
+        .....
+    })
+
+    new Vue({
+        el: '#app2',
+        .....
+        }
+    })
+</script>
+
+````
+
+### É possível acessar dados do `vuw` externamente com `js?`
+
+SIM.
+
+Mas nâo há muitos cenários em que isso seja útil. Em geral, seria melhor fazer uma unica instancia do `vue`  maior.
+
+Mas cuidadao. Fique mais por acessar os dados do que modificalos. Por que  `Vue` nâo reage bem a alterações que vem de fora.
+
+````html
+<div id="app1"> {{ titulo1 }}
+    <button @click="alterar">Alterar</button>
+</div>
+
+<div id="app2"> {{ titulo2 }}
+    <button @click="alterar">Alterar</button>
+</div>
+
+<script>
+    const vm1 = new Vue({
+        el: '#app1',
+        data: {titulo1: 'Teste 1' },
+        methods: {
+            alterar() {vm2.titulo2 += '????'}
+        }
+    })
+    const vm2 = new Vue({
+        el: '#app2',
+        data: { titulo2: 'Teste 2'},
+        methods: {
+            alterar() {vm1.titulo1 += '!!!!'}
+        }
+    })
+</script>
+````
+
+### Gerencia de dados
+
+O `Vue` instância dados reativos somente na sua inicialização. Sua instanciação `new Vue()` cria um objeto. Se você não define os dados em na sua estrutura interna de `data`, e define por fora com `inst_vue.new_attr` esse `new_attr` nâo terá as propriedade reativas como as de `data`.
+
+
+
+### `$el` `$data`
+
+Se você instancia o Vue em uma variável, você pdoe acessála no browser. Inspecionadno, você pode ver seus atributos, todos começando com `$` como o `$el` e `$data`
+
+`$el`
+
++ Aponta para os dados HTMLem que a instância do `Vue` referencia e vigia.
+
+`$data`
+
++ Os dados passados na instância
+
+````html
+<div id="app">{{ titulo }}
+<button @click="alterar">Alterar</button>
+</div>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {titulo: 'Teste 1'},
+        methods: {alterar() {this.titulo += '!'}}
+    })
+</script>
+````
+
+printar `vm.titulo` é o mesmo que fazer `vm.$data.titulo` só que sem passar pelo setter do `Vue`.
+
+`$template`
+
+Você pode guardar um *template* dentro da instância do `Vue`
+
+Além disso, após criar um elemento, você pode atribuir à uma elemento HTML posteriormente
+
+````html
+
+<meta charset="UTF-8">
+<script src="https://unpkg.com/vue"></script>
+
+<div id="app"></div>
+
+<script>
+    const vm = new Vue({
+        // VocÊ pode guardar treco html dentro da instância do Vue que será depois rederizado
+        template: `
+            <div>
+                <h1>{{ aula }}</h1>
+                <h2>{{ modulo }}</h2>
+                <button @click="alterarAula">Alterar Aula</button>
+                <button @click="alterarModulo">Alterar Módulo</button>
+            </div>
+        `,
+        data: {
+            aula: 'Aula: Montando Instância Vue',
+            modulo: 'Módulo: Instância Vue'
+        },
+        methods: {
+            alterarAula() {
+                this.aula += '#'
+            },
+            alterarModulo() {
+                this.modulo += '#'
+            }
+        }
+    })
+
+    vm.$mount('#app') // Vai direcionar o vm para #app
+</script>
+````
+
+### Ciclo de Vida da Instância do Vue
+
+![](C:\Users\Rafael\Google Drive\Private Studies\VUE\md_images\life-cycle-instance-vue.png)
+
+Cada um desse passos vermelhos com fundo branco são momentos em que você pode fazer alguma coisa se você precisar.
+
+OBS: **Mount** significa montar. É nessa hora que ele chama o HTML.
+
+Execute o código no browser e veja no `console()`. Todos esse métodos são executados por default no ciclo de vida de uma instância do `Vue`. Dependendo da aplicação pode ser útil você saber disso. 
+
++ Esse métodos são executados nessa ordem
++ Somente os relacionados ao `update` são chamados mais de uma vez. Para cada vez que algo é atualizado
++ Quando se executa `destroy()` o Vue sai de cena e deixa o HTML do último jeito que estava antes de sair.
+
+````html
+<meta charset="UTF-8">
+<script src="https://unpkg.com/vue"></script>
+
+<div id="app">
+    <h1>{{ titulo }}</h1>
+    <button @click="titulo += '#'">Alterar Título</button>
+    <!-- destroy() é um método já default do Vue -->
+    <button @click="$destroy()">Destruir</button>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {titulo: 'Ciclo de Vida'},
+        /* Está na ordem em que seria executado
+           Esses métodos ficam diertamente na estância, e nâo nos métodos
+           Os create e mount sâo chamados somente uma vez na inicialização */
+        beforeCreate() {
+            console.log('Antes de Criar')
+        },
+        created() {
+            console.log('Criado')
+        },
+        beforeMount() {
+            console.log('Antes de Montar (DOM)')
+        },
+        mounted() {
+            console.log('DOM Montada')
+        },
+        // beforeUpdate e Update sâo chamdaos vários vezes
+        beforeUpdate() {
+            console.log('Antes de Atualizar')
+        },
+        updated() {
+            console.log('Atualizado')
+        },
+        // chamadas 1 vez quando executa destroy()
+        beforeDestroy() {
+            console.log('Antes de destruir')
+        },
+        destroyed() {
+            console.log('Destruido')
+        }
+    })
+</script>
+````
+
+## 5. Vue CLI
+
+é necessário ter o `node`
+
+Para ataulizar o node você pode intallar um pacote que faz isso:
+
+https://stackoverflow.com/questions/18412129/how-can-i-update-npm-on-windows
+
+`npm install -g npm-windows-upgrade`
+
+Depois execute
+
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+
+`npm-windows-upgrade`
+
+Que vai atualizar seu node
+
+Ou o comando
+
+`npm-windows-upgrade -p -v latest`
+
+`npm-windows-upgrade --npm-version latest`
+
+Tem que executatar com administrador no PowerShell
+
+C:\Users\Rafael\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Windows PowerShell
+
+**Iremos agora a fazer em servidor Web**
+
+Vamos deixar de usar o protodolo `file://` para usa o `http://`. Isso nos fornecerá um cenário mais realista e melhor para as requisições AJAX (Asynchronous *JavaScript* and XML).
+
+**O PRÓPRIO VUE CLI já tem um servidor web dentro de si**
+
+Além do esqueleto fornece váriso recurso interresante por `default` e pode ainda extender pondo plugins
+
+Um dos benefício de usar é:
+
++ autoreload
++ build de desenvolvimento e produçâo
++ organização das pastas
++ Ambiente de Dev e Build configurados
++ Compila componente em um único arquivo
++ pré-processadores (SASS)
+
+
+
+**Fluxo do Vue CLI**
+
+![](C:\Users\Rafael\Google Drive\Private Studies\VUE\md_images\visao-vue-cli.png)
+
+
+
+
+
+Para installar de forma global o criador de projetos
+
+`npm install -g  @vue/cli`
+
+Depois que instalar, o vue estará apto no cmd
+
+**Criando um projeto simples**
+
+`vue create projeto-simples`
+
+e depois selecione a opçâo default
+
+Como meu PC é lento, vai demorar até está tudo concluido, mas deu tudo certo
+
+Como mensagem final terá
+
+````
+$ cd projeto-simples
+$ npm run serve
+````
+
+Entre na pasta e ao executar o `serve` vai subir o servidorweb. Dessa forma será melhor que simplesmente abrir um arquivo pelo browser.
+
+No final mostrara o endereço de acesso:
+
+````
+App running at:
+  - Local:   http://localhost:8080/
+  - Network: http://172.23.17.141:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+````
+
+
+
+**Estrutura das pastas**
+
+Ele intala muitas dependenicias  no `node_modules` para tudo funcionar, entâo o gitignore nao vai lela. para instalar as dependeicas, execute `npm i` no embiente com o `package.json`
+
+````
+projeto-simples/
+	node_modules/
+	public/
+		favicon.ico
+		index.html
+	src/
+		assets/
+			logo.png
+		components/
+			HelloWorld.vue
+		App.vue
+		main.js
+	.gitignore
+	babel.config.js
+	package-lock.json
+	package.json
+	REAME.md
+````
+
++ `node_modules`: dependências do `node` para excutar tudo. Não é lançada no `git` pois pode ser refeita ao fazer `npm i` pelo `package.json`
+
++ `public`: Tem o HTML principla da SPA (Single Page Application)
+
++ `src/` Pasta em que haverá 95% do trabalho
+
+  + `main.js`: importa o Vue. Cria e redereniza sua instância
+  + `App.vue` : Arquivo de vue principal que vai importar os váriso componentes da pasta `components`
+  + `components/` poussui compontes, arquivos `.vue`
+
+  #### Estrutura do arquivo `.vue`
+
+  Analisando o arquivo `App.vue` vemos que:
+
+  + O arquivo `.vue` é composto das tags `<template>, <script>, <style>` que definem o componente nas partes respectivamente: HTML, JS e CSS
+
+  + Um componten por importar componentes e ser exportado para outros:
+
+    + `import HelloWorld from './components/HelloWorld.vue'`
+
+    + E coloca em :
+
+    + ````
+      components: {
+          HelloWorld
+        }
+      ````
+
+    + No `<script>` de `HelloWorld.vue` está:
+
+      + ````vue
+        <script>
+        export default {
+          name: 'HelloWorld',
+          props: {
+            msg: String
+          }
+        }
+        </script>
+        ````
+
+      + 
+
+  + Um componente, para ser exportável presia definir seu nome em `name:`
+
+  ````vue
+  <template>
+    <div id="app">
+      <img alt="Vue logo" src="./assets/logo.png">
+      <HelloWorld msg="Welcome to Your Vue.js App"/>
+    </div>
+  </template>
+  
+  
+  <script>
+  import HelloWorld from './components/HelloWorld.vue'
+  
+  export default {
+    name: 'app',
+    components: {
+      HelloWorld
+    }
+  }
+  </script>
+  
+  <style>
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
+  </style>
+  ````
+
+  
+
+  ````vue
+  <template>
+    <div id="app">
+      {{ titulo }}
+      <button @click="titulo += '#'">Alterar</button>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    data: function() {
+      return {
+        titulo: 'Teste Data Usando VueJS'
+      }
+    }
+  }
+  </script>
+  
+  <style>
+    #app {
+      background-color: chocolate;
+      color: white;
+    }
+  </style>
+  ````
+
+  #### `Vue` JavaScript em `serve` ou em `build`
+
+  O JAVASCRIPT GERADO PELO VUE CLI FICA EM `app.js` . ESSE É UM JAVASCRIPT GERADO EM MEMORIA (PARA EFICIENTE EM AMBIENTE DE PRODUÇÂO E FAZER RELOAD). ELE FICA NA MEMORIA POR ISSO NÃO É UM ARQUIVO**
+
+  Quando eu executar o build
+
+  `npm run build`
+
+  Vai gerar a pasta `dist/` E rodar o processo de construção da pasta que será realmente exportada para produção
+
+  #### Gerando o projeto com plugins
+
+  O `GitBash`  nâo é interativo. Se você quiser colocar plugins você terá que selecionar cada um deles. Para entâo abrir uma cmd mais interativa. use o seguinte comando
+
+  `winpty vue.cmd create hello-world`
+
+  `(Press <space> to select, <a> to toggle all, <i> to invert selection)`
+
+  Use as teclas acima para selecionar
+
+  Para vançar `<entert`
+
+  Não tem como voltar, entâo use `CTRL+C`
+
++ **OBS**: O vue por default vai subir na porta 8080, mas se já estiver sendo usada, ele vai subir o número, para talvez 8081. TOME CUIDADO COM ISSO.
+
+#### plugins
+
+`electron`: deixar a aplicaçâo des
+
+`veutify`: Material Design para o Vue
+
+---
+
+#### Consultando a DOC deste módulo
+
+**Mais sobre `.vue`** e CLI
+
+**O Arquivo ".vue"**
+
+Você pode aprender mais sobre o arquivo ".vue" nesse artigo da documentação oficial: <https://br.vuejs.org/v2/guide/single-file-components.html>
+
+Você pode aprender mais sobre o método  `render()`  nesse outro artigo na documentação oficial: <https://br.vuejs.org/v2/guide/render-function.html>
+
+---
+
+**The CLI**
+
+Aprenda mais sobre o Vue CLI aqui: <https://cli.vuejs.org/>
+
+**Depurando Projetos VueJS**
+
+Duas ferramentas que você pode usar:
+
+1) Ferramenta de Desenvolvimento Vue (<https://github.com/vuejs/vue-devtools>)
+
+2) A ferramenta de Desenvolvedor do Chrome
+
+Quando estiver trabalhando com projetos criados com o CLI , você pode facilmente debugar a sua aplicação abrindo o a **ferramenta de desenvolvimento** (abaixo exemplo no Chrome) abrir a aba **sources**. Você deverá ver a pasta **webpack://** e dentro você encontrará todos os arquivos do projeto (área em destaque vermelha).
+
+Agora é só abrir os arquivos e colocar os **breakpoints** para debugar a sua aplicação em execução.
+
+---
+
