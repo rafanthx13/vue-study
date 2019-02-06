@@ -318,6 +318,8 @@ Então, analisando a situaçâo, voc~e guanha bastante desmpenho em usar `comput
 
 O exemplo abaixo mostra isso. `contaMetodo` e `contaComputada` contam quantas vezes executa esse metodos (`index-v-computed.html`) e mostram a diferença de 100 ==> 1
 
+**Dica de quando usar `computed` ou `methods`** : Se a ação que você é executada na inicializaçâo da página, entâo use `computed`. `methods` é bom reagir a ações do usuário.
+
 ````html
 <!DOCTYPE html>
 <html>
@@ -447,3 +449,229 @@ Neste exemplo: Nome está sendo *monitorada*. Cada vez que mudar, acrescentará 
 
 ## Manipulando Formulários
 
+Modificações de `v-model`
+
++ `v-model.lazy`: Faz com que atualize o `data` no Vue somente quando sair do campo. útil para ferramentas de busca, para que não execute a busca a cada palavra digitada
++ `v-model.number`: Converter o campo em número. Sem isso, um campo que deveria receber um número para fazer operações aritméticas vai ser `String` e não o fará.
+
+No exemplo abaixo há vários campos com formulários ligados por `v-model`
+
+````html
+<!DOCTYPE html><html>
+  <head>
+    <meta charset="utf-8" /><title>Introdução ao Vue JS</title>
+    <script src="https://unpkg.com/vue"></script>
+  </head>
+  <body>
+      
+    <div id="app">
+      <gui-titulo titulo="Formulários"></gui-titulo>
+
+      <p>Texto: {{ texto }}</p>
+      <p>
+        <input type="text" v-model="texto" />
+      </p>
+
+      <p>Textarea: {{ textarea }}</p> 
+      <!-- Com esse CSS, vai querbrar a linha -->
+      <p style="white-space: pre-line">{{ textarea }}</p>
+      <p>
+        <textarea v-model="textarea" rows="8" cols="80"></textarea>
+      </p>
+
+      <hr>
+
+      <p>CheckBox</p>
+      <input type="checkbox" id="aceitaTermos" v-model="termos">
+      <label for="aceitaTermos">Aceitar os Termos! {{ termos }}</label>
+      
+      <hr>
+
+      <p>Multiplos CheckBox {{ notificacoes }}  </p>
+      <p>
+        <input type="checkbox" id="recebreEmails" value="email" v-model="notificacoes">
+        <label for="recebreEmails">Receber emails</label>
+        <input type="checkbox" id="recebreSMS" value="sms" v-model="notificacoes">
+        <label for="recebreSMS">Receber emails</label>
+        <input type="checkbox" id="receberTel" value="tel" v-model="notificacoes">
+        <label for="receberTel">Receber emails</label>
+      </p>
+
+      <hr>
+
+      <p>Radios {{ sexo }}  </p>
+      <p>
+        <input type="radio" id="masculino" value="M"  v-model="sexo">
+        <label for="masculino">Masculino</label>
+        <input type="radio" id="feminino" value="F"  v-model="sexo">
+        <label for="feminino">Masculino</label>
+      </p>
+
+      <hr>
+
+      <p>Select {{ ano }} </p>
+      <select v-model="ano">
+        <option disabled value="">Escolah o ano</option>
+        <option value="2017">Ano 2017</option>
+        <option value="2018">Ano 2018</option>
+        <option value="2019">Ano 2019</option>
+      </select>
+
+      <hr>
+
+      <p>Multiple Selects {{ cores }} </p>
+      <select multiple v-model="cores">
+        <option disabled value="">Escolha as cores</option>
+        <option>Azul</option>
+        <option>Verde</option>
+        <option>Vermelho</option>
+      </select>
+
+      <hr>
+
+      <!-- Com o lazy, a atribuiçâo do valor ao JS
+            Só será feito quando sair do campo. Isso é
+            útil para um campo de buscar, para que o usuário
+            digite e soemente quando ele clicar num botão
+            mandar a requisição. Para nâo fazer a busca a cada letra-->
+      <p>Lazy : {{ busca }}  </p>
+      <p>
+        <input type="text" v-model.lazy="busca">
+      </p>
+
+      <hr>
+
+      <!-- v-model.number: Obriga ao JS a deixar a var sempre com o tipo number
+            Sem isso, quando o usuário começar a digita, o JS vai entender como
+            String e aasim nâo daria para fazer certas operações-->
+      <p>Number: {{ idade }} {{ "tipo" + typeof(idade) }}  </p>
+      <input type="number" v-model.number="idade">
+      
+    </div>
+
+    <script type="text/javascript">
+        
+      Vue.component("gui-titulo", {
+        props: ["titulo"],
+        template: "<h2>{{ titulo }}</h2>"
+      });
+
+      var app = new Vue({
+        el: "#app",
+        data: {texto: "", textarea: "", termos: false, notificacoes: [],
+          sexo: null, ano: null, cores: ['Verde','Vermelho'], busca: '', idade: 45}
+      });
+</script></body></html>
+````
+
+## Vue CLI
+
+Link do Github: https://github.com/vuejs/vue-cli
+
+Link desde projeto puro em HTML/CSS/JS:> https://github.com/guiferreira/Netflix-Template
+
+
+
+Instalando o `vue-init-cli`
+
+````
+npm install -g @vue/cli-init
+````
+
+
+
+Comandos
+
++ `vue -V`
+  + Ver a versão do Vue instalada
++ iniciar projetos
+  + Exemplo: `vue init webpack-simple netflixVue`
+  + Templates possíveis: https://github.com/vuejs-templates
+
+
+
+##  Anotações sobre o Projeto do Netflix Layout Vue
+
+`ref`
+
++ Serve para buscar uma atributo do objeto. 
+
++ Exemplo: Se um componente eu crio 4 instâncias, e nele fala para pegar uma tag com o atributo `x`  então todos eles vão se referir a mesma  coisa, ao primeiro que aparecer essa `tag`.
+
++ link: https://vuejs.org/v2/api/#vm-refs
+
+  
+
+````html
+<div ref="scroller" class="row">
+        
+    ...
+    
+ <script>
+    methods: {
+        scrollDireita(){
+    const self = this; // faço isso para apontar para o objeto do vue
+    this.intervalo = setInterval(function(){ this.$ref.scroller.scrollLeft += 1 }  , 5);
+        },
+        scrollEsquerda(){
+       const self = this; // Outra forma é usar arrow function
+       this.intervalo = setInterval( () => { this.$ref.scroller.scrollLeft -= 1 }  , 5);
+        },
+        clearScroll(){
+            clearInterval(this.intervalo);
+        },
+    } 
+ </script>
+````
+
+Agora, com esse `$ref` vai pega o atributo de `ref` de cada componente.
+
+
+
+####`v-bind:key`
+
++ Quando vocÊ fizer um `v-for` para objetos,mande também um identificador e coloque em `v-bind:key`. Isso ajuda a compila o `vue` ea renderizar melhor nâo dando erros
+
+####**Ciclo de vida `created()`**
+
+Linik: https://br.vuejs.org/v2/guide/instance.html
+
++ O momento `created()` é um bom momento para colocar chamadas de API.
+
+#### LIB **`json-serveer`**
+
+Link: https://github.com/typicode/json-server
+
++ **O que faz:**Serve para simular uma API REST rapidamente acessando um arquivo `json` `db.json.` útil para prototipagem e testar o funcionamento rápido de acesso ao HTTP
+
+Install JSON Server
+
+```
+npm install -g json-server
+```
+
+Create a `db.json` file with some data
+
+```
+{
+  "posts": [
+    { "id": 1, "title": "json-server", "author": "typicode" }
+  ],
+  "comments": [
+    { "id": 1, "body": "some comment", "postId": 1 }
+  ],
+  "profile": { "name": "typicode" }
+}
+```
+
+Start JSON Server
+
+```
+json-server --watch db.json
+```
+
+Now if you go to <http://localhost:3000/posts/1>, you'll get
+
+```
+{ "id": 1, "title": "json-server", "author": "typicode" }
+```

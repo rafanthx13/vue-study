@@ -69,6 +69,30 @@
         <option>Verde</option>
         <option>Vermelho</option>
       </select>
+
+      <hr>
+
+      <!-- Com o lazy, a atribuiçâo do valor ao JS
+            Só será feito quando sair do campo. Isso é
+            útil para um campo de buscar, para que o usuário
+            digite e soemente quando ele clicar num botão
+            mandar a requisição. Para nâo fazer a busca a cada letra
+      -->
+      <p>Lazy : {{ busca }}  </p>
+      <p>
+        <input type="text" v-model.lazy="busca">
+      </p>
+
+      <hr>
+
+      <!-- v-model.number: Obriga ao JS a deixar a var sempre com o tipo number
+            Sem isso, quando o usuário começar a digita, o JS vai entender como
+            String e aasim nâo daria para fazer certas operações
+
+
+       -->
+      <p>Number: {{ idade }} {{ "tipo" + typeof(idade) }}  </p>
+      <input type="number" v-model.number="idade">
       
     </div>
 
@@ -87,7 +111,9 @@
           notificacoes: [],
           sexo: null,
           ano: null,
-          cores: ['Verde','Vermelho']
+          cores: ['Verde','Vermelho'],
+          busca: '',
+          idade: 45
         }
       });
     </script>
