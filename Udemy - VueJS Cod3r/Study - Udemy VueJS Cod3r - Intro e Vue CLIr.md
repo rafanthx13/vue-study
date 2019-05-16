@@ -418,7 +418,7 @@ Detectam quando a pessoa digita algo ou aperta alguma tecla especifica (como `EN
 
 [Compted Propriety Oficial BR](https://br.vuejs.org/v2/guide/computed.html)
 
-É um pouco difícil de entender mesmo. esse tópico está mais ligada a eficiência e uso correto de um recurso do Vue. Mas, você pode usa-lo de forma grose eira apesar de que assim ficará ineficiente.
+É um pouco difícil de entender mesmo. esse tópico está mais ligada a eficiência e uso correto de um recurso do Vue. Há situações em que, se não usá-lo, perderá eficiência, é uma alternativa a usar `methods()`.
 
 **O que é:** dados computados são cacheados de acordo com suas dependências. Um dado computado somente será reavaliado quando alguma de suas dependências for alterada. Isso significa que enquanto `a depedência` não sofrer alterações, múltiplos acessos ao `computed data`retornarão o último valor calculado sem precisar executar a função novamente, sempre que a tela for rederizada, ou que hoje em dia, seria o tempo todo.
 

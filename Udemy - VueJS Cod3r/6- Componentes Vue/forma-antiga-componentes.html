@@ -2,14 +2,16 @@
 <script src="https://unpkg.com/vue"></script>
 
 <div id="app">
+    <!-- Um compontente pode ser reautilizável o HTML é CaseSenitive -->
     <CONTADOR></CONTADOR>
     <Contador></Contador>
     <contadoR></contadoR>
 </div>
 
 <script>
-    // Registro Global
+    // Registro Global de um compoenente
     Vue.component('contador', {
+        // O template de um compoennte deve ter somente um único elemento raiz
         template: `
             <div>
                 <span>{{ contador }}</span>
@@ -17,6 +19,8 @@
                 <button @click="contador--">-</button>
             </div>
         `,
+        // Como componente, data presisa ser um função
+        // Tem que ser assim para que cada compoente tenha seu scopo isoladp
         data() {
             return { 
                 contador: 0
