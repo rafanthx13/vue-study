@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flexbox #02</title>
+    <style>
+        div {
+            border: solid 5px dodgerblue;
+            font-size: 40px;
+        }
+
+        .flex-container-re div{
+            box-sizing: border-box;
+        }
+
+        .flex-container-re {
+          display: flex;
+          height: 300px;
+          width: 600px;
+        }
+
+        .flex-container-re div:nth-child(3) {
+          background-color: indianred;
+
+          order: -1;
+          /* property order:
+              + Podemos idicar a ordem que os elemtnos soa exibidos sem modificarmos o html
+              + A ordem dos elementtos por default é zero, por isso ficana ordem que vem do HTMl
+              + Quanto maior o order, vai ficar no end da main-xsis
+              + Order muda a ordem mesmo
+           */
+
+           align-self: flex-end;
+           /*
+                align-self:
+              + alinha um unico eelemetno no sentido do cross axis do container que ele está
+           */
+        }
+
+        .flex-container-re div {
+          width: 100px;
+          flex-grow: 0;
+          /* ninguem cresce */
+          flex-grow: 2;
+           /* todos crescem para ocupar o espaço de forma uniforme */
+        }
+
+        .flex-container div:nth-child(1) {
+            flex-shrink: 5;
+            /*
+              DIMINUI, É ANTAGONICO A flex-grow
+            */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="flex-container-re">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+    </div>
+</body>
+
+</html>

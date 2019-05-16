@@ -1,0 +1,32 @@
+## Seção 8: Componenets Avançados
+Do pai para o Filho:
++ COmunicaçâo atraves de Props (forma mais eficiente)
+DO FIlho para o Pai
++ 1. Emiçâo de evento com `$emit` e o pai captura isso com `nome_event=" $event"` e o pai pega com $event sendo o retorno, que pode ser um dado ou um objeto
++ 2. O pai passar uma funçaão para o filho, e quando o filho executar, será no contexto do pai e não do filho
++ Barramento
+Faz a manipulaçâo de eventos de forma centralizada em outra intancia Vue. Dessa forma, encpsula a parte do '$emit' e do '$on' em funções de um módulo externo
+
+
+## Seçâo 9 : Uso avançado de componentes
+SLOT
++ forma de vocêr mandar para um componente tags: conteudo HTML. 
++ VOcê poes tags de slot no filho,e, o conteduo do pai cai nesse lugar no filho
++ Os SLots do filho podem ser identificados pelo name. Assim, um slot identificável só mostra informaçâo se o conteudo HTML tiver o name com o seu valor identificavel
+
+COMPOENTES DIINMICOS
++ Em uma TAG você pode trocar a exibiçâo de um componente por outro pelo nome da variavel
++ <component :is="showComponent"></component>, vai mostra o componetne do valor de showCOmponente, que é a series de objetos importaados e nomeadnos em 'compomonntes' pelo import
++ A troca de componentes dinamicos cria dois métodos de life-cycle: activate () deactivad()
++ Se vocÊr usar a TAG keep-alive, quando um componente é desetivado emvez de ser destruido, ele se manetem e nâo é destruido. Isso é util por quando um componente é desativado, ele é destruido e todo o seu conteudo se perde.
+
+#### Seção 11: Formulário:
+
+1. Modificadores do vmodel
++ `lazy`: A atualizaçâo dos dados só é feita no v-model depois que sai do campo
++ `trim`: Tira espaços brancos nas duas pontas da string. Nâo tira a do meio
++ `number`: Converte o valor para `Number` no JS.
+
+2. Criar componente que seja um input:
++ Coloque v-model no pai que chama o filho
++ No filho coloque @click="$emit('input', value)" para alterar para o pai; OBS: o fillho tem que ter uma prop especial chamada value
