@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Introdução ao Vue JS</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+
+    <div id="app">
+
+        <gui-titulo v-bind:titulo="meuTitulo"></gui-titulo>
+        
+        <input type="text" v-model="meuTitulo">
+
+        <p>{{ 23.983475235 | TrataValor }}</p>
+
+        <ul>
+            <li v-for="registro in registros">
+                {{ registro.titulo }} - {{ registro.desc }} -  {{ registro.link }} - {{ registro.valor | TrataValor }}
+
+            </li>
+        </ul>
+        <p>Total: (Método) {{ totalValorMetodo() | TrataValor}} </p>
+        <p>Total: (Computado) {{ totalValorComputado | TrataValor}} </p>
+        <p>contaMetodo: {{ contaMetodo }}</p> <!-- 102 -->
+        <p>contaComputado: {{ contaComputado }}</p> <!-- 1 -->
+        
+    </div>
+
+    <script type="text/javascript">
+        
+        Vue.component('gui-titulo', {
+            props: ['titulo'],
+            template: `<h2>{{ titulo }}</h2>`
+        });
+
+        var app = new Vue({
+            el:"#app",
+            data: {
+                meuTitulo: "Esse é o meu Título",
+                html_text: '<a href="#">Esse é um link</a>',
+                registros: [
+                    {titulo: "Título1", desc: 'desc1', link: 'l1', valor: 12.54363463},
+                    {titulo: "Título2", desc: 'desc2', link: 'l2', valor: 10.43262},
+                    {titulo: "Título3", desc: 'desc3', link: 'l3', valor: 32.52353},
+                ],
+                contaMetodo: 0,
+                contaComputado: 0
+            },       
+            filters: {
+                TrataValor: function(valor) {
+                    return ('R$ ' + (valor).toFixed(2)).replace('.',',')
+                }
+            },
+            methods: {
+                totalValorMetodo: function(){
+                    this.contaMetodo++;
+                    
+                    let total = 0;
+                    for(item of this.registros){
+                        total += item.valor;
+                    }
+                    return total;
+                }
+            },
+            computed: {
+                totalValorComputado: function(){
+                    this.contaComputado++;
+                
+                    let total = 0;
+                    for(item of this.registros){
+                        total += item.valor;
+                    }
+                    return total;
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Introdução ao Vue JS</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+
+    <div id="app">
+
+        <gui-titulo v-bind:titulo="meuTitulo"></gui-titulo>
+        
+        <input type="text" v-model="meuTitulo">
+
+        <!-- <gui-tabela v-bind:titulos="['TIULO', 'DESC', 'LINK']" v-bind:registros="registros"></gui-tabela> -->
+
+        <!-- Depois de rederizado, nâo permite mais mudar -->
+        <p v-once>{{ titulo }}</p>
+
+        <!-- Renderizar HMTL -->
+        <p v-html="html_text">{{html_text}}</p>
+        
+    </div>
+
+    <script type="text/javascript">
+        
+        Vue.component('gui-titulo', {
+            props: ['titulo'],
+            template: `<h2>{{ titulo }}</h2>`
+        });
+
+        var app = new Vue({
+            el:"#app",
+            data: {
+                meuTitulo: "Esse é o meu Título",
+                html_text: '<a href="#">Esse é um link</a>'
+            },
+            methods: {
+                usuarioClicou: function(){
+                    this.cliclou = !this.cliclou
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+

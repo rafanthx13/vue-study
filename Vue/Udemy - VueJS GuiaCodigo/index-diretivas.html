@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Introdução ao Vue JS</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+
+    <div id="app">
+        <!-- {} => Interpolação no HTML-->
+        {{ msg }}
+        <!-- v-bind => interpolar atributo de tag  -->
+        <p v-bind:title="titulo">Teste com titulo</p>
+        <!-- v-if => Mostrando ou não um elemetno: v-if (remove o HTML) -->
+        <p v-if="condicao">Teste com IF</p>
+        <!-- v-for => laço de repetição e iteração  -->
+        <p v-for="registor in registros">
+            {{ registor.titulo}}
+        </p>
+        <!-- v-else => Somente pode ser usado -->
+        <!-- v-on => Reagir a eventos executando uma funçâo de 'methods' -->
+        <button v-if="cliclou" v-on:click="usuarioClicou">salvar</button>
+        <button v-else v-on:click="usuarioClicou">aguarde...</button>
+        <!-- v-model => faz ligação de duas vias entre a variável 
+             Modifica tanto o próprio campo quatno na instância do Vue -->
+        <input type="text" v-model="usuario.nome">
+    </div>
+
+    <script type="text/javascript">
+
+        var app = new Vue({
+            el:"#app",
+            data:{
+                msg:'Iniciando com Vue JS',
+                titulo: "Teste com V-bind",
+                condicao: true,
+                registros: [
+                    {titulo: 'registro1'},
+                    {titulo: 'registro2'},
+                    {titulo: 'registro3'},
+                    {titulo: 'registro4'},
+                    {titulo: 'registro5'}
+                ],
+                cliclou: true,
+                usuario: {nome:""}
+            },
+            methods: {
+                usuarioClicou: function(){
+                    this.cliclou = !this.cliclou
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+

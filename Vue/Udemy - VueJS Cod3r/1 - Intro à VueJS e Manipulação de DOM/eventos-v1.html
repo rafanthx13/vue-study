@@ -1,0 +1,22 @@
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div id="app">
+    <p>{{ contador }}</p>
+    <!-- Se eu colocar 'v-once', aí, não mudaria, e ficara sempre como 0 -->
+    <button v-on:click="somar()">Somar 1</button>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            contador: 0
+        },
+        methods: {
+            somar(event) {
+                console.log(event)
+                this.contador++
+            }
+        }
+    })
+</script>
