@@ -1,0 +1,1 @@
+https://github.com/garethredfern/nuxt-basic-blog
